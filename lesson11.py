@@ -18,9 +18,13 @@ def select_data(qry):
         tree.delete(*tree.get_children())
         mycursor.execute(qry)
         rows=mycursor.fetchall()
+        if len(rows)>0:
+                for data in rows:
+                    tree.insert("",tk.END,text=data[0],values=(data[1],data[2],data[3],data[4],data[5]))
+        else:
+            tree.insert("",tk.END,text="No Data Found")
         
-        for data in rows:
-            tree.insert("",tk.END,text=data[0],values=(data[1],data[2],data[3],data[4],data[5]))
+            
     except mysql.connector.Error as error:
         messagebox.showerror("Error", f"Failed to select data from table: {error}")
 
@@ -55,13 +59,12 @@ root.geometry("400x400")
 
 column_names = ['name','age','email','gender','address']
 
-
 tree=ttk.Treeview(root,columns=column_names)
 
 search_label=tk.Label(text="Search").grid(row=0,column=0,sticky = "W",padx=10)
 search=tk.Entry(width=30)
-search.grid(row=1,column=0,sticky="w",pady=10,padx=10)
 
+search.grid(row=1,column=0,sticky="w",pady=10,padx=10)
 search.bind("<KeyRelease>",lambda e:search_data(search.get()))
 
 tree.heading('#0', text='ID')
