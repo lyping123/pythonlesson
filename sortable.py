@@ -13,6 +13,7 @@ mydb = mysql.connector.connect(
 
 
 mycursor = mydb.cursor()
+
 def submit():
     try:
         insert= "insert into `member_list` (`name`, `age`, `email`, `gender`, `address`) values (%s, %s, %s, %s, %s)"
@@ -21,7 +22,7 @@ def submit():
         
         ms.showinfo("Success","Record inserted successfully into memberlist table")
     except mysql.connector.Error as error:
-        ms.showerror("Error","Failed to insert record into memberlist table {}".format(error))
+        ms.showerror("Error","Failed to insert record into memberlist table".format(error))
         
 
 def fetch_data():
@@ -41,10 +42,6 @@ def fetch_data():
         
 root = tk.Tk()
 root.geometry("500x500")
-
-
-
-
 
         
 tk.Label(root, text="Username").pack()

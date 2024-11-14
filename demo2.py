@@ -1,38 +1,42 @@
-import mysql.connector
 import tkinter as tk
-from tkinter import messagebox,ttk
 
+# Initialize the main window
+root = tk.Tk()
+root.geometry("300x250")
+root.title("Reorderable Listbox")
 
-root=tk.Tk()
-root.title("Demo2")
-root.geometry("200x200")
-# button1=tk.Button(text="Left",height=15,width=30).grid(row=0,column=0,sticky="w",)
-# button1=tk.Button(text="Center",height=15,width=30).grid(row=0,column=1)
-# button2=tk.Button(text="Right",height=15,width=30).grid(row=0,column=2,sticky="e")
-# tk.Button(text="1",height=2,width=5).grid(row=0,column=0,sticky="e")
-# tk.Button(text="2",height=2,width=5).grid(row=1,column=1,sticky="e")
-# tk.Button(text="3",height=2,width=5).grid(row=2,column=2,sticky="e")
-# tk.Button(text="4",height=2,width=5).grid(row=3,column=3,sticky="e")
-# tk.Button(text="5",height=2,width=5).grid(row=4,column=4,sticky="e")
-# tk.Button(text="6",height=2,width=5).grid(row=5,column=5,sticky="e")
-# tk.Button(text="7",height=2,width=5).grid(row=6,column=6,sticky="e")
-# tk.Button(text="8",height=2,width=5).grid(row=7,column=7,sticky="e")
-# tk.Button(text="9",height=2,width=5).grid(row=8,column=8,sticky="e")
-# tk.Button(text="10",height=2,width=5).grid(row=9,column=9,sticky="e")
+# Create a Listbox
+listbox = tk.Listbox(root, selectmode=tk.SINGLE, height=10)
+listbox.pack(pady=20, padx=20, fill=tk.BOTH, expand=True)
 
-tk.Button(text=1,height=2,width=15).grid(row=0,column=0,columnspan=5)
+# Sample data to display
+items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"]
 
+# Populate the Listbox with data
+for item in items:
+    listbox.insert(tk.END, item)
 
-tk.Button(text=2,height=2,width=5).grid(row=1,column=0,columnspan=2)
-tk.Button(text=2,height=2,width=5).grid(row=1,column=3,columnspan=2)
+# Declare start_index as a global variable
+start_index = None
 
+# Store the initial position when the item is clicked
+def on_click(event):
+    global start_index
+    start_index = listbox.nearest(event.y)  # Gets the item index under the mouse cursor
 
-tk.Button(text=3,height=2,width=5).grid(row=2,column=0)
-tk.Button(text=3,height=2,width=5).grid(row=2,column=1)
-tk.Button(text=3,height=2,width=5).grid(row=2,column=3)
-tk.Button(text=3,height=2,width=5).grid(row=2,column=4)
+# Move the item to a new position while dragging
+def on_drag(event):
+    global start_index
+    current_index = listbox.nearest(event.y)
+    if current_index != start_index:  # If the cursor is over a different item
+        # Swap the items at start_index and current_index
+        listbox.insert(current_index, listbox.get(start_index))
+        listbox.delete(start_index + (1 if current_index < start_index else 0))
+        start_index = current_index  # Update start index to current position
 
+# Bind events to handle dragging
+listbox.bind("<Button-1>", on_click)    # Mouse button press to start drag
+listbox.bind("<B1-Motion>", on_drag)    # Mouse drag event
 
-tk.mainloop()
-
-
+# Start the Tkinter main loop
+root.mainloop()
